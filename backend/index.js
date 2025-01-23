@@ -1,21 +1,37 @@
-const express=require('express');
-const app=express();
-const mongoose = require('mongoose');
+const connect = require('./connection/connect')
+const Question = require('./models/Question');
+const express = require('express');
+const app = express();
+const cors = require('cors');
+app.use(cors({ origin: '*' }));
 
-main().catch(err => console.log(err)).then(()=>{console.log("connected successfully!")});
+app.use(express.json());
+connect();
 
-async function main() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/test');
+app.post("/question", async (req, res) => {
+    const title = req.query.title;
+    const page = Number(req.query.page) || 0; // Default to page 0 if not provided
 
-  // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
-}
-
-
-
-app.get("/",(req,res)=>{
-    res.send("Hello World");
+    try {
+        const data = await Question.aggregate([
+            {$match:{
+                title:{$regex:title,$options:"i"}
+            }},
+            {
+                $facet:{
+                    TotalResponse:[{$count:"count"}],
+                    Document:[{$skip:(page*10)},{$limit:(10)}]
+                }
+            }
+        ])
+        console.log(data[0]);
+        res.json(data[0]);
+    } catch (err) {
+        res.json({ message: err.message });
+    }
 })
 
-app.listen(2000,()=>{
-    console.log("Server is running on port 3000");
+app.listen(3000, () => {
+    console.log("Server is running at port 3000");
 })
+//Rearrange the words to form a sentence
