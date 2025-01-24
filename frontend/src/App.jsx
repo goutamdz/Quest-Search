@@ -1,67 +1,70 @@
-import { useCallback, useEffect, useState } from "react";
-import axios from "axios";
+import React, { useCallback, useEffect, useState } from 'react';
+import SearchBox from './components/SearchBox';
+import axios from 'axios';
+import Card from './components/Card';
+import Button from './components/Button';
 
 function App() {
-  const [question, setQuestion] = useState("");
-  const [questionData, setQuestionData] = useState([]);
+  const [selectedFilters, setSelectedFilters] = useState(["MCQ"]);
+  const [title, setTitle] = useState("");
   const [page, setPage] = useState(0);
-  const [totalResponse,setTotalResponse] = useState(0);
+  const [questionData, setQuestionData] = useState([]);
+  const [totalResponse, setTotalResponse] = useState(0);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = useCallback(
-    async (e) => {
-      e && e.preventDefault();
-      try {
-        let res = await axios.post(
-          `http://localhost:3000/question?title=${question}&page=${page}`,
-          { question: question }
-        );
-        console.log(res.data);
+  const handleSearch = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get(`http://localhost:3000/question?title=${title}&page=${page}&selectedFilters=${selectedFilters.join(",")}`);
+
+      if (res.data) {
         setQuestionData(res.data.Document);
-        setTotalResponse(res.data.TotalResponse[0].count);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setQuestionData([]);
+        setTotalResponse(res.data.total);
       }
-    },
-    [page, question]
-  );
+      console.log("Response data:", res.data);
+    } catch (error) {
+      console.error("Error during handleSearch:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [title, page, selectedFilters]);
 
   useEffect(() => {
-    handleSubmit();
-  }, [page, handleSubmit]);
+    handleSearch();
+  }, [page, selectedFilters]);
 
-  const handleNext = () => {
-    setPage((prevPage) => prevPage + 1);
-  };
-
-  const handlePrev = () => {
-    setPage((prevPage) => prevPage - 1);
-  };
+  // Reset page to 0 whenever filters or title change
+  useEffect(() => {
+    setPage(0);
+  }, [title, selectedFilters]);
 
   return (
-    <>
-      <label>
-        Question:
-        <input
-          type="text"
-          name="question"
-          onChange={(e) => setQuestion(e.target.value)}
-          className="bg-red-50 m-3"
-        />
-      </label>
-      {questionData.length === 0 ? (
-        <h1>No data found</h1>
-      ) : (
-        questionData.map((data) => (
-          <div className="m-10" key={data._id}>
-            <h1>{data.title}</h1>
-            <h2>{data.solution}</h2>
-          </div>
-        ))
-      )}
-      {questionData.length >=10 && <button onClick={handleNext}>Next</button>}<br />
-      {page >= 1 && <button onClick={handlePrev}>Prev</button>}
-    </>
+    <div>
+      <SearchBox
+        selectedFilters={selectedFilters}
+        setSelectedFilters={setSelectedFilters}
+        setTitle={setTitle}
+        handleSearch={handleSearch}
+      />
+      {loading && <p>Loading...</p>}
+      <div>
+        <h3>Total Results: {totalResponse}</h3>
+        <ul>
+          {questionData.map((question, index) => (
+            <Card key={index} question={question} />
+          ))}
+        </ul>
+      </div>
+      <br />
+      {totalResponse>10 &&
+        <div className="border p-4 rounded shadow-md bg-white max-w-md mx-auto flex justify-between">
+          {page>0 && <Button label="Previous" onClick={(e) => setPage(page - 1)} />}
+          <span>Page: {page + 1}</span>
+          <Button label="Next" onClick={(e) => setPage(page + 1)} />
+        </div>
+      }
+
+    </div>
   );
 }
 
