@@ -2,8 +2,8 @@ import React from 'react';
 
 const Card = ({ question }) => {
   return (
-    <div className="border p-4 rounded shadow-md bg-white max-w-md mx-auto">
-      <h2 className="text-xl font-bold mb-2">{question.title}</h2>
+    <div className="border p-4 rounded shadow-md bg-white mx-auto">
+      <h3 className="text-base font-bold mb-2">{question.title}</h3>
       <p className="text-gray-700 mb-2">Type: {question.type}</p>
       {question.anangramType && (
         <p className="text-gray-700 mb-2">Anangram Type: {question.anangramType}</p>

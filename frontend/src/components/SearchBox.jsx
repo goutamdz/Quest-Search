@@ -16,9 +16,9 @@ function SearchBox({selectedFilters,setSelectedFilters,setTitle,handleSearch}) {
   };
 
   return (
-    <div className='m-5'>
+    <div className='p-5 sticky top-0 bg-slate-200 z-10 shadow-lg mb-5 border-solid border-slate-500 border-b-2'>
       {/* Search Box */}
-      <div className="flex items-center border-2 border-gray-300 rounded-full h-full px-3 relative">
+      <div className="flex items-center border-2 border-gray-300 rounded-full h-full px-3 relative bg-white">
         {/* Search Icon */}
         <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
         {/* Input Field */}

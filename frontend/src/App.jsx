@@ -48,7 +48,7 @@ function App() {
       />
       {loading && <p>Loading...</p>}
       <div>
-        <h3>Total Results: {totalResponse}</h3>
+        <h3 className='mx-5 text-green-600 font-semibold'>Total Results: {totalResponse}</h3>
         <ul>
           {questionData.map((question, index) => (
             <Card key={index} question={question} />
@@ -59,7 +59,7 @@ function App() {
       {totalResponse>10 &&
         <div className="border p-4 rounded shadow-md bg-white max-w-md mx-auto flex justify-between">
           {page>0 && <Button label="Previous" onClick={(e) => setPage(page - 1)} />}
-          <span>Page: {page + 1}</span>
+          <span>Page: {page + 1} of {Math.ceil(totalResponse/10-(page*10))}</span>
           <Button label="Next" onClick={(e) => setPage(page + 1)} />
         </div>
       }
