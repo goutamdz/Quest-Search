@@ -9,6 +9,9 @@ app.use(cors({ origin: process.env.CORS_ORIGIN }));
 app.use(express.json());
 connect();
 
+app.get("/",(req,res)=>{
+    res.send("Hello World");
+})
 
 
 app.get("/question", async (req, res) => {
