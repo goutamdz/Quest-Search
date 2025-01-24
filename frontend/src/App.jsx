@@ -3,6 +3,7 @@ import SearchBox from './components/SearchBox';
 import axios from 'axios';
 import Card from './components/Card';
 import Button from './components/Button';
+import {baseURL} from "./constant.js"; //getting backend server url from constant.js & there from .env file
 
 function App() {
   const [selectedFilters, setSelectedFilters] = useState(["MCQ"]);
@@ -11,11 +12,12 @@ function App() {
   const [questionData, setQuestionData] = useState([]);
   const [totalResponse, setTotalResponse] = useState(0);
   const [loading, setLoading] = useState(false);
+  
 
   const handleSearch = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`http://localhost:3000/question?title=${title}&page=${page}&selectedFilters=${selectedFilters.join(",")}`);
+      const res = await axios.get(`${baseURL}/question?title=${title}&page=${page}&selectedFilters=${selectedFilters.join(",")}`);
 
       if (res.data) {
         setQuestionData(res.data.Document);

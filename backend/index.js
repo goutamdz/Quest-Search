@@ -44,7 +44,7 @@ app.get("/question", async (req, res) => {
                 total: 0 
             });
         }
-        console.log(data[0].TotalResponse[0].count);
+        // console.log(data[0].TotalResponse[0].count);
         res.json({
             Document: data[0].Document,
             total: data[0].TotalResponse[0].count,
