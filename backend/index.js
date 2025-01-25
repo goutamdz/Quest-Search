@@ -10,7 +10,7 @@ app.use(express.json());
 connect();
 
 app.get("/",(req,res)=>{
-    res.send("Hello World");
+    res.json({"message":"Welcome to the Question Bank API"});
 })
 
 
