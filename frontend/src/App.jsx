@@ -4,6 +4,7 @@ import axios from 'axios';
 import Card from './components/Card';
 import Button from './components/Button';
 import { baseURL } from "./constant.js"; //getting backend server url from constant.js & there from .env file
+import Loader from './components/Loader.jsx';
 
 function App() {
   const [selectedFilters, setSelectedFilters] = useState(["MCQ"]);
@@ -48,7 +49,7 @@ function App() {
         setTitle={setTitle}
         handleSearch={handleSearch}
       />
-      {loading ? <p>Loading...</p> :
+      {loading ? <p><Loader/></p> :
         (
           <>
             <div>
