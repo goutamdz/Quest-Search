@@ -36,6 +36,8 @@ const QuestionSchema=new Schema({
     
 })
 
+QuestionSchema.index({ title: 1 }); 
+
 
 const Question=mongoose.model("Question",QuestionSchema);
 module.exports=Question;
